@@ -1,0 +1,470 @@
+{% extends "base.html" %}
+
+{% block title %}Learning Assessment - Kaveri.ai{% endblock %}
+
+{% block extra_css %}
+<style>
+    .assessment-container {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 2rem 0;
+    }
+    
+    .assessment-card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        background: white;
+    }
+    
+    .assessment-header {
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .assessment-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+    }
+    
+    .assessment-icon {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+        display: block;
+        animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+    }
+    
+    .assessment-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+    
+    .assessment-subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        margin-bottom: 0;
+    }
+    
+    .question-card {
+        background: white;
+        border: 2px solid #f1f5f9;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .question-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .question-card:hover {
+        border-color: #e2e8f0;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        transform: translateY(-2px);
+    }
+    
+    .question-card:hover::before {
+        opacity: 1;
+    }
+    
+    .question-card:focus-within {
+        border-color: #4f46e5;
+        box-shadow: 0 8px 30px rgba(79, 70, 229, 0.15);
+    }
+    
+    .question-card:focus-within::before {
+        opacity: 1;
+    }
+    
+    .question-label {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 1rem;
+        display: block;
+        line-height: 1.5;
+    }
+    
+    .question-number {
+        display: inline-block;
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        color: white;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 32px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-right: 0.75rem;
+    }
+    
+    .answer-textarea {
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1.25rem;
+        font-size: 1rem;
+        line-height: 1.6;
+        transition: all 0.3s ease;
+        resize: vertical;
+        min-height: 120px;
+        background: #f8fafc;
+    }
+    
+    .answer-textarea:focus {
+        outline: none;
+        border-color: #4f46e5;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+    
+    .answer-textarea::placeholder {
+        color: #94a3b8;
+    }
+    
+    .submit-section {
+        background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+        border-radius: 16px;
+        padding: 2.5rem;
+        text-align: center;
+        margin: 2rem 0;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .submit-button {
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        border: none;
+        border-radius: 50px;
+        padding: 1rem 3rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: white;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .submit-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(79, 70, 229, 0.4);
+    }
+    
+    .submit-button:active {
+        transform: translateY(0);
+    }
+    
+    .submit-note {
+        color: #64748b;
+        font-size: 0.9rem;
+        margin-top: 1rem;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .tips-card {
+        background: linear-gradient(135deg, #fffbeb, #fef3c7);
+        border: 1px solid #fcd34d;
+        border-radius: 16px;
+        padding: 2rem;
+    }
+    
+    .tips-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .tips-icon {
+        font-size: 1.5rem;
+        color: #d97706;
+        margin-right: 1rem;
+    }
+    
+    .tips-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #92400e;
+        margin: 0;
+    }
+    
+    .tips-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .tips-item {
+        padding: 0.75rem 0;
+        color: #92400e;
+        display: flex;
+        align-items: flex-start;
+        border-bottom: 1px solid rgba(245, 158, 11, 0.2);
+    }
+    
+    .tips-item:last-child {
+        border-bottom: none;
+    }
+    
+    .tips-item i {
+        color: #10b981;
+        margin-right: 1rem;
+        margin-top: 0.25rem;
+        flex-shrink: 0;
+    }
+    
+    .progress-indicator {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding: 0 1rem;
+    }
+    
+    .progress-step {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #e2e8f0;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    
+    .progress-step.active {
+        background: #4f46e5;
+        transform: scale(1.2);
+    }
+    
+    .progress-step.completed {
+        background: #10b981;
+    }
+    
+    .progress-step::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 100%;
+        width: calc(100% - 12px);
+        height: 2px;
+        background: #e2e8f0;
+        transform: translateY(-50%);
+    }
+    
+    .progress-step:last-child::after {
+        display: none;
+    }
+    
+    .progress-step.completed::after {
+        background: #10b981;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="assessment-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8">
+                <!-- Progress Indicator -->
+                <div class="progress-indicator">
+                    {% for i in range(6) %}
+                    <div class="progress-step {% if loop.index <= 1 %}active{% endif %}"></div>
+                    {% endfor %}
+                </div>
+
+                <div class="assessment-card">
+                    <!-- Header -->
+                    <div class="assessment-header">
+                        <i class="fas fa-clipboard-list assessment-icon"></i>
+                        <h1 class="assessment-title">Learning Style Assessment</h1>
+                        <p class="assessment-subtitle">
+                            Help us understand how you learn best by answering these 6 questions
+                        </p>
+                    </div>
+
+                    <!-- Assessment Form -->
+                    <div class="card-body p-4 p-lg-5">
+                        <form method="POST" action="{{ url_for('ass.assignment') }}" id="assessmentForm">
+                            <!-- Question 1 -->
+                            <div class="question-card">
+                                <label class="question-label">
+                                    <span class="question-number">1</span>
+                                    When learning complex new information, what approach works best for you?
+                                </label>
+                                <textarea class="form-control answer-textarea" name="Q1_answer" 
+                                          placeholder="Describe your preferred learning approach, such as reading, watching videos, hands-on practice, or discussing with others..."
+                                          required></textarea>
+                            </div>
+
+                            <!-- Question 2 -->
+                            <div class="question-card">
+                                <label class="question-label">
+                                    <span class="question-number">2</span>
+                                    How do you typically approach solving difficult problems?
+                                </label>
+                                <textarea class="form-control answer-textarea" name="Q2_answer" 
+                                          placeholder="Describe your problem-solving process. Do you break it down step by step, try different approaches, or seek help from others?"
+                                          required></textarea>
+                            </div>
+
+                            <!-- Question 3 -->
+                            <div class="question-card">
+                                <label class="question-label">
+                                    <span class="question-number">3</span>
+                                    What type of learning environment helps you concentrate best?
+                                </label>
+                                <textarea class="form-control answer-textarea" name="Q3_answer" 
+                                          placeholder="Describe your ideal learning environment. Do you prefer quiet spaces, background music, group settings, or something else?"
+                                          required></textarea>
+                            </div>
+
+                            <!-- Question 4 -->
+                            <div class="question-card">
+                                <label class="question-label">
+                                    <span class="question-number">4</span>
+                                    When you encounter challenging concepts, what is your immediate reaction?
+                                </label>
+                                <textarea class="form-control answer-textarea" name="Q4_answer" 
+                                          placeholder="Describe how you handle challenges. Do you persist, take breaks, research more, or ask for explanations?"
+                                          required></textarea>
+                            </div>
+
+                            <!-- Question 5 -->
+                            <div class="question-card">
+                                <label class="question-label">
+                                    <span class="question-number">5</span>
+                                    How do you prefer to receive feedback on your work?
+                                </label>
+                                <textarea class="form-control answer-textarea" name="Q5_answer" 
+                                          placeholder="Describe your feedback preferences. Do you like direct feedback, gentle suggestions, written comments, or verbal discussions?"
+                                          required></textarea>
+                            </div>
+
+                            <!-- Question 6 -->
+                            <div class="question-card">
+                                <label class="question-label">
+                                    <span class="question-number">6</span>
+                                    What motivates you most when learning something new?
+                                </label>
+                                <textarea class="form-control answer-textarea" name="Q6_answer" 
+                                          placeholder="Describe what drives your learning. Is it personal interest, career goals, problem-solving, curiosity, or something else?"
+                                          required></textarea>
+                            </div>
+
+                            <!-- Submit Section -->
+                            <div class="submit-section">
+                                <button type="submit" class="submit-button">
+                                    <i class="fas fa-paper-plane me-2"></i>Complete Assessment
+                                </button>
+                                <p class="submit-note">
+                                    Your responses will help create a truly personalized learning experience with Kaveri.ai
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Assessment Tips -->
+                <div class="tips-card mt-4">
+                    <div class="tips-header">
+                        <i class="fas fa-lightbulb tips-icon"></i>
+                        <h3 class="tips-title">Tips for Great Responses</h3>
+                    </div>
+                    <ul class="tips-list">
+                        <li class="tips-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>Be honest and specific about your actual learning preferences and experiences</div>
+                        </li>
+                        <li class="tips-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>Think about recent learning experiences that worked well for you</div>
+                        </li>
+                        <li class="tips-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>There are no right or wrong answers - this is about understanding your unique style</div>
+                        </li>
+                        <li class="tips-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>Your answers will directly personalize your AI learning assistant's approach</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add interactivity to the assessment form
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('assessmentForm');
+        const textareas = form.querySelectorAll('textarea');
+        const progressSteps = document.querySelectorAll('.progress-step');
+        
+        // Auto-resize textareas
+        textareas.forEach(textarea => {
+            textarea.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 200) + 'px';
+            });
+            
+            // Update progress when user focuses on a question
+            textarea.addEventListener('focus', function() {
+                const questionNumber = this.name.replace('Q', '').replace('_answer', '');
+                updateProgress(questionNumber);
+            });
+        });
+        
+        function updateProgress(currentQuestion) {
+            progressSteps.forEach((step, index) => {
+                step.classList.remove('active', 'completed');
+                if (index + 1 < currentQuestion) {
+                    step.classList.add('completed');
+                } else if (index + 1 == currentQuestion) {
+                    step.classList.add('active');
+                }
+            });
+        }
+        
+        // Form submission enhancement
+        form.addEventListener('submit', function(e) {
+            const submitButton = this.querySelector('button[type="submit"]');
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Creating Your Profile...';
+            submitButton.disabled = true;
+        });
+        
+        // Initialize progress
+        updateProgress(1);
+    });
+</script>
+{% endblock %}
